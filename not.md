@@ -1,4 +1,23 @@
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # LONGEST SEQUENCE OF ONES AFTER A FLIP
 
 import java.util.Scanner;
