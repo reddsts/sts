@@ -1,3 +1,4 @@
+
 # LONGEST SEQUENCE OF ONES AFTER A FLIP
 
 public class Main{
