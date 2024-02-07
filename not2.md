@@ -25,6 +25,7 @@ import java.util.Comparator;
 import java.util.Scanner;
 
 public class Main {
+
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         System.out.print("Enter the number of file names: ");
@@ -40,7 +41,7 @@ public class Main {
         for (String s : strings) {
             System.out.println(s);
         }
-
+        
         scanner.close();
     }
 
