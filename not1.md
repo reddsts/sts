@@ -18,122 +18,131 @@
 
 
 
-# leftrotate
+# MANEUVERING(number od paths)
 
 import java.util.Scanner;
 
-public class RotateLeft {
-    public static void main(String[] args) {
+public class EthCode {
+    static int numberOfPaths(int m, int n) {
+        int[] dp = new int[n];
+        dp[0] = 1;
+        for (int i = 0; i < m; i++) {
+            for (int j = 1; j < n; j++) {
+                dp[j] += dp[j - 1];
+            }
+        }
+        return dp[n - 1];
+    }
+
+    public static void main(String args[]) {
         Scanner scanner = new Scanner(System.in);
 
-        System.out.print("Enter the number of elements in the array: ");
-        int length = scanner.nextInt();
-        
-        int[] arr = new int[length];
+        System.out.print("Enter the number of rows: ");
+        int rows = scanner.nextInt();
+        System.out.print("Enter the number of columns: ");
+        int cols = scanner.nextInt();
+        System.out.println("Number of paths: " + numberOfPaths(rows, cols));
+        scanner.close();
+    }
+}
+
+#EQUILIBRIUM:
+
+import java.util.Scanner;
+
+class Main {
+    static int findMaxSum(int[] arr, int n) {
+        int totalSum = 0;
+        for (int num : arr) {
+            totalSum += num;
+        }
+
+        int leftSum = 0;
+        for (int i = 0; i < n; i++) {
+            if (leftSum == totalSum - leftSum - arr[i]) {
+                return leftSum;
+            }
+            leftSum += arr[i];
+        }
+
+        return -1; // If no such split is possible
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Enter the number of elements in the array:");
+        int n = scanner.nextInt();
+        int[] arr = new int[n];
         System.out.println("Enter the elements of the array:");
-        for (int i = 0; i < length; i++) {
+        for (int i = 0; i < n; i++) {
             arr[i] = scanner.nextInt();
         }
+        System.out.println(findMaxSum(arr, n));
 
-        System.out.print("Enter the number of rotations: ");
-        int n = scanner.nextInt();
         scanner.close();
-
-        System.out.println("Original array:");
-        for (int i = 0; i < arr.length; i++) {
-            System.out.print(arr[i] + " ");
-        }
-
-        // Rotate the given array by n times toward the left
-        for (int i = 0; i < n; i++) {
-            int j, first;
-            // Stores the first element of the array
-            first = arr[0];
-            for (j = 0; j < arr.length - 1; j++) {
-                // Shift element of array by one
-                arr[j] = arr[j + 1];
-            }
-            // First element of array will be added to the end
-            arr[j] = first;
-        }
-        
-        System.out.println();
-        System.out.println("Array after left rotation:");
-        for (int i = 0; i < arr.length; i++) {
-            System.out.print(arr[i] + " ");
-        }
     }
 }
 
-#maxsubarrayproduct
+# maze
 
 import java.util.Scanner;
-
-public class MaxProductSubArray {
-    public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-
-        System.out.print("Enter the number of elements in the array: ");
-        int length = scanner.nextInt();
-        
-        int[] a = new int[length];
-        System.out.println("Enter the elements of the array:");
-        for (int i = 0; i < length; i++) {
-            a[i] = scanner.nextInt();
-        }
-        
-        scanner.close();
-
-        method(a);
-    }
-
-    static void method(int a[]) {
-        int res = a[0];
-        int s = 0, e = 0;
-        int n = a.length;
-        for (int i = 0; i < n; i++) {
-            int mul = a[i];
-            for (int j = i + 1; j < n; j++) {
-                if (mul > res) {
-                    s = i;
-                    e = j;
-                    res = mul;
-                }
-                mul *= a[j];
-            }
-            if (mul > res) {
-                s = i;
-                e = n;
-                res = mul;
-            }
-        }
-        System.out.println("Maximum product subarray:");
-        for (int i = s; i < e; i++) {
-            System.out.print(a[i] + " ");
-        }
-    }
+public class RatMaze {
+static int N;
+void printSolution(int sol[][]) {
+for (int i = 0; i &lt; N; i++) {
+for (int j = 0; j &lt; N; j++)
+System.out.print(&quot; &quot; + sol[i][j] + &quot; &quot;);
+System.out.println();
+}
+}
+boolean isSafe(int maze[][], int x, int y) {
+return (x &gt;= 0 &amp;&amp; x &lt; N &amp;&amp; y &gt;= 0 &amp;&amp; y &lt; N &amp;&amp; maze[x][y] == 1);
+}
+boolean solveMazeUtil(int maze[][], int x, int y, int sol[][]) {
+if (x == N - 1 &amp;&amp; y == N - 1 &amp;&amp; maze[x][y] == 1) {
+sol[x][y] = 1;
+return true;
 }
 
-# factors for a number 
+if (isSafe(maze, x, y)) {
+sol[x][y] = 1;
+if (solveMazeUtil(maze, x + 1, y, sol))
+return true;
+if (solveMazeUtil(maze, x, y + 1, sol))
+return true;
 
-import java.util.Scanner;
-
-public class Main {
-    public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-
-        System.out.print("Enter a number: ");
-        int num = scanner.nextInt();
-        scanner.close();
-
-        System.out.println("Factors of " + num + " are:");
-
-        // finding and printing factors between 1 to num
-        for (int i = 1; i <= num; i++) {
-            if (num % i == 0) {
-                System.out.println(i + " ");
-            }
-        }
-    }
+sol[x][y] = 0; // Backtrack
+return false;
 }
 
+return false;
+}
+
+boolean solveMaze(int maze[][]) {
+int sol[][] = new int[N][N];
+if (!solveMazeUtil(maze, 0, 0, sol)) {
+System.out.println(&quot;Solution doesn&#39;t exist&quot;);
+return false;
+}
+System.out.println(&quot;Solution:&quot;);
+printSolution(sol);
+return true;
+}
+
+public static void main(String args[]) {
+Scanner scanner = new Scanner(System.in);
+RatMaze m = new RatMaze();
+System.out.print(&quot;Enter the size of the maze: &quot;);
+N = scanner.nextInt();
+int[][] maze = new int[N][N];
+System.out.println(&quot;Enter the maze (0 for blocked, 1 for path):&quot;);
+for (int i = 0; i &lt; N; i++) {
+for (int j = 0; j &lt; N; j++) {
+maze[i][j] = scanner.nextInt();
+}
+}
+m.solveMaze(maze);
+
+scanner.close();
+}
+}
