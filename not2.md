@@ -18,7 +18,7 @@
 
 
 
-#NATURAL
+# NATURAL
 
 import java.util.Arrays;
 import java.util.Comparator;
@@ -71,7 +71,7 @@ public class Main {
     }
 }
 
-#n-queen :
+# n-queen :
 
 import java.util.Scanner;
 
@@ -134,7 +134,7 @@ class EthCode {
 }
 
 
-#SELECTION SORT :
+# SELECTION SORT :
 
 import java.util.Scanner;
 
