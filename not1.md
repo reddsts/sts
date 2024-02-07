@@ -46,7 +46,7 @@ public class EthCode {
     }
 }
 
-#EQUILIBRIUM:
+# EQUILIBRIUM:
 
 import java.util.Scanner;
 
