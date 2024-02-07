@@ -18,165 +18,127 @@
 
 
 
-//Segmented Sieve Algorithm
-
+//SORTED UNIQUE PERMUTATION:
 import java.util.*;
 
-public class test {
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        
-        System.out.println("Enter the lower Bound");
-        int l = sc.nextInt();
-        
-        System.out.println("Enter the Upper Bound");
-        int n = sc.nextInt();
-        
-        boolean[] array = new boolean[n + 1];
-        
-        for (int i = 2; i <= n; i++) {
-            array[i] = true;
+public class EthCOde {
+
+    static int factorial(int n) {
+        int f = 1;
+        for (int i = 1; i <= n; i++)
+            f = f * i;
+        return f;
+    }
+
+    static void print(char[] temp) {
+        for (int i = 0; i < temp.length; i++)
+            System.out.print(temp[i]);
+        System.out.println();
+    }
+
+    static int calculateTotal(char[] temp, int n) {
+        int f = factorial(n);
+        HashMap<Character, Integer> hm = new HashMap<Character, Integer>();
+        for (int i = 0; i < temp.length; i++) {
+            if (hm.containsKey(temp[i]))
+                hm.put(temp[i], hm.get(temp[i]) + 1);
+            else
+                hm.put(temp[i], 1);
         }
-        
-        for (int i = 2; i * i <= n; i++) {
-            if (array[i]) {
-                for (int j = i * i; j <= n; j += i) {
-                    array[j] = false;
-                }
+        for (Map.Entry<Character, Integer> e : hm.entrySet()) {
+            Integer x = e.getValue();
+            if (x > 1) {
+                int temp5 = factorial(x);
+                f = f / temp5;
             }
         }
-        
-        System.out.println("Prime numbers from " + l + " to " + n + ":");
-        
-        for (int i = l; i <= n; i++) {
-            if (array[i]) {
-                System.out.print(i + " ");
+        return f;
+    }
+
+    static void nextPermutation(char[] temp) {
+        int i;
+        for (i = temp.length - 1; i > 0; i--)
+            if (temp[i] > temp[i - 1])
+                break;
+        int min = i;
+        int j, x = temp[i - 1];
+        for (j = i + 1; j < temp.length; j++)
+            if ((temp[j] < temp[min]) && (temp[j] > x))
+                min = j;
+        char temp_to_swap;
+        temp_to_swap = temp[i - 1];
+        temp[i - 1] = temp[min];
+        temp[min] = temp_to_swap;
+        Arrays.sort(temp, i, temp.length);
+        print(temp);
+    }
+
+    static void printAllPermutations(String s) {
+        char temp[] = s.toCharArray();
+        Arrays.sort(temp);
+        print(temp);
+        int total = calculateTotal(temp, temp.length);
+        for (int i = 1; i < total; i++)
+            nextPermutation(temp);
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter a string: ");
+        String s = scanner.nextLine();
+        scanner.close();
+        printAllPermutations(s);
+    }
+}
+
+//WARNSDROFF:
+import java.util.*;
+
+class EthCode {
+
+    public static final int N = 5;
+    public static final int[] row = {2, 1, -1, -2, -2, -1, 1, 2, 2};
+    public static final int[] col = {1, 2, 2, 1, -1, -2, -2, -1, 1};
+
+    private static boolean isValid(int x, int y) {
+        return x >= 0 && y >= 0 && x < N && y < N;
+    }
+
+    private static void print(int[][] visited) {
+        for (var r : visited) {
+            System.out.println(Arrays.toString(r));
+        }
+        System.out.println();
+    }
+
+    public static void knightTour(int[][] visited, int x, int y, int pos) {
+        visited[x][y] = pos;
+        if (pos >= N * N) {
+            print(visited);
+            visited[x][y] = 0;
+            return;
+        }
+        for (int k = 0; k < 8; k++) {
+            int newX = x + row[k];
+            int newY = y + col[k];
+            if (isValid(newX, newY) && visited[newX][newY] == 0) {
+                knightTour(visited, newX, newY, pos + 1);
             }
         }
+        visited[x][y] = 0;
     }
-}
 
-//Binary Palindrome
-
-import java.util.*;
-
-public class tcs {
     public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        System.out.println("Enter the number");
-        int n = sc.nextInt();
-        String s1 = "";
-        String s2 = "";
-
-        while (n > 0) {
-            s1 = n % 2 + s1;
-            s2 = s2 + n % 2;
-            n = n / 2;
-        }
-
-        if (s1.equals(s2)) {
-            System.out.println("Binary Palindrome");
-        } else {
-            System.out.println("Not Binary Palindrome");
-        }
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Enter the starting row (0-4):");
+        int startX = scanner.nextInt();
+        System.out.println("Enter the starting column (0-4):");
+        int startY = scanner.nextInt();
+        int[][] visited = new int[N][N];
+        int pos = 1;
+        knightTour(visited, startX, startY, pos);
+        scanner.close();
     }
 }
 
 
-//Booth’s Algorithm
-
-import java.util.*;
-
-public class tcs {
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        System.out.println("Enter the Multiplier");
-        int a = sc.nextInt();
-        System.out.println("Enter the Multiplicand");
-        int b = sc.nextInt();
-        int p = 0;
-        int c = 0;
-        
-        if (a < 0) {
-            a = -1 * (a);
-            c++;
-        }
-        
-        if (b < 0) {
-            b = -1 * (b);
-            c++;
-        }
-        
-        while (a > 0) {
-            if (a % 2 == 1) {
-                p = p + b;
-            }
-            a = a >> 1;
-            b = b << 1;
-        }
-        
-        if (c == 1) {
-            System.out.println("Result " + (-1 * p));
-        } else {
-            System.out.print("Result " + p);
-        }
-    }
-}
-
-
-//Euclidean Algorithm
-
-import java.util.*;
-
-public class test {
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        System.out.println("Enter the Number 1");
-        int number1 = sc.nextInt();
-        System.out.println("Enter the Number 2");
-        int number2 = sc.nextInt();
-        System.out.println(gcd(number1, number2));
-    }
-    
-    static int gcd(int a, int b) {
-        if (a == 0) {
-            return b;
-        }
-        return gcd(b % a, a);
-    }
-}
-
-
-//Karatsuba Algorithm
-
-import java.util.*;
-
-public class tcs {
-    public static void main(String s[]) {
-        Scanner sw = new Scanner(System.in);
-        long x = sw.nextLong();
-        long y = sw.nextLong();
-        System.out.println(k(x, y));
-    }
-
-    static long k(long x, long y) {
-        if (x < 10 && y < 10) {
-            return x * y;
-        }
-
-        long n = Math.max(String.valueOf(x).length(), String.valueOf(y).length());
-        long n1 = n / 2;
-        long a = x / (long) Math.pow(10, n1);
-        long b = x % (long) Math.pow(10, n1);
-        long c = y / (long) Math.pow(10, n1);
-        long d = y % (long) Math.pow(10, n1);
-
-        long s1 = k(a, c);
-        long s2 = k(b, d);
-        long s3 = k(a + b, c + d);
-        long s4 = s3 - s2 - s1;
-        long res = s1 * (long) Math.pow(10, 2 * n1) + s4 * (long) Math.pow(10, n1) + s2;
-        
-        return res;
-    }
-}
