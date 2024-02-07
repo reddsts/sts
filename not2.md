@@ -18,227 +18,165 @@
 
 
 
-#Chainese reminder theorm
+#NATURAL
 
-#with scanner class
-
-import java.util.*;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in); // Create a Scanner object
-        
-        System.out.print("Enter the number of modular equations: ");
-        int k = scanner.nextInt(); // Read the number of modular equations
-        
-        int num[] = new int[k];
-        int rem[] = new int[k];
-        
-        System.out.println("Enter the values for num array:");
-        for (int i = 0; i < k; i++) {
-            num[i] = scanner.nextInt(); // Read values for num array
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter the number of file names: ");
+        int n = scanner.nextInt();
+        scanner.nextLine();
+        String[] strings = new String[n];
+        System.out.println("Enter the file names:");
+        for (int i = 0; i < n; i++) {
+            strings[i] = scanner.nextLine();
         }
-        
-        System.out.println("Enter the values for rem array:");
-        for (int i = 0; i < k; i++) {
-            rem[i] = scanner.nextInt(); // Read values for rem array
+        Arrays.sort(strings, new NaturalSortComparator());
+        System.out.println("Sorted file names:");
+        for (String s : strings) {
+            System.out.println(s);
         }
-        
-        System.out.println("x = " + crt(num, rem, k));
-        
-        scanner.close(); // Close the Scanner object
+
+        scanner.close();
     }
 
-    static int crt(int num[], int rem[], int k) {
-        int x = 1;
-        int i;
-        while (true) {
-            for (i = 0; i < k; i++) {
-                if (x % num[i] != rem[i]) {
-                    break;
+    static class NaturalSortComparator implements Comparator<String> {
+        public int compare(String s1, String s2) {
+
+            String[] split1 = s1.split("(?<=\\D)(?=\\d)|(?<=\\d)(?=\\D)");
+            String[] split2 = s2.split("(?<=\\D)(?=\\d)|(?<=\\d)(?=\\D)");
+            int length = Math.min(split1.length, split2.length);
+            for (int i = 0; i < length; i++) {
+                if (split1[i].matches("\\d+") && split2[i].matches("\\d+")) {
+                    int number1 = Integer.parseInt(split1[i]);
+                    int number2 = Integer.parseInt(split2[i]);
+                    int result = Integer.compare(number1, number2);
+                    if (result != 0) {
+                        return result;
+                    }
+                } else {
+                    int result = split1[i].compareTo(split2[i]);
+                    if (result != 0) {
+                        return result;
+                    }
                 }
             }
-            if (i == k) {
-                return x;
-            }
-            x++;
+            return Integer.compare(split1.length, split2.length);
         }
     }
 }
 
-
-#without scanner class
-
-
-public class Main{
-    public static void main(String[] args){
-        int num[] = {17,7,11};
-        int rem[] = {7,4,5};
-        int k = num.length;
-        System.out.println("x = " + crt(num,rem,k));
-    }
-    static int crt(int num[],int rem[],int k){
-        int x = 1;
-        int i;
-        while(true){
-            for(i=0;i<k;i++){
-                if(x%num[i]!=rem[i]){
-                    break;
-                }
-            }
-            if(i==k){
-                return x;
-            }
-            x++;
-        }
-    }
-}
-
-#ALICE APPLE TREE :
-
-import java.util.*;
-public class Main{
-    public static void main(String[] args){
-        Scanner sc = new Scanner(System.in);
-        int apple = sc.nextInt();
-        int count=0,sum=0;
-        while(sum<apple){
-            count++;
-            sum += 12*count*count;
-        }
-        System.out.println(8*count);
-    }
-}
-
-#TOGGLE THE SWITCH :
+#n-queen :
 
 import java.util.Scanner;
-public class Main {
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        int n = sc.nextInt();
-        int[] counts = toggle(n);
-        System.out.println("Closed : " + counts[0]);
-        System.out.println("Opened : " + counts[1]);
-    }
-    static int[] toggle(int n) {
-        boolean a[] = new boolean[n + 1];
-        for(int i=1;i<=n;i++){
-            a[i] = true;
-        }
-        for (int j = 1; j <= n; j++) {
-            for (int k = j;k<= n; k+=j) {
-                a[k] = !a[k];
-            }
-        }
-        int c = 0, o = 0;
-        for (int p = 1; p <= n; p++) {
-            if (a[p] == true) {
-                c++;
-            } 
-            else {
-                o++;
-            }
-        }
-        int counts[] = { c, o };
-        return counts;
-    }
-}
 
+class EthCode {
+    static int N;
+    static int[] ld;
+    static int[] rd;
+    static int[] cl;
 
-#STROBOGRAMMATIC NUMBER :
-
-import java.util.*;
-public class Main{
-    public static void main(String[] args){
-        Scanner sc = new Scanner(System.in);
-        String str = sc.nextLine();
-        if(strobo(str)){
-            System.out.println("YES");
-        }
-        else{
-            System.out.println("NO");
+    static void printSolution(int board[][]) {
+        for (int i = 0; i < N; i++) {
+            for (int j = 0; j < N; j++)
+                System.out.printf(" %d ", board[i][j]);
+            System.out.printf("\n");
         }
     }
-    static boolean strobo(String str){
-        Map<Character,Character> map = new HashMap<>();
-        map.put('0','0');
-        map.put('1','1');
-        map.put('8','8');
-        map.put('6','9');
-        map.put('9','6');
-        int left = 0;
-        int right = str.length()-1;
-        while(left<=right){
-            char l = str.charAt(left);
-            char r = str.charAt(right);
-            if((!map.containsKey(l)) || (map.get(l) != r)){
-                return false;
+
+    static boolean solveNQUtil(int board[][], int col) {
+        if (col >= N)
+            return true;
+        for (int i = 0; i < N; i++) {
+            if ((ld[i - col + N - 1] != 1 &&
+                    rd[i + col] != 1) && cl[i] != 1) {
+                board[i][col] = 1;
+                ld[i - col + N - 1] = rd[i + col] = cl[i] = 1;
+                if (solveNQUtil(board, col + 1))
+                    return true;
+                board[i][col] = 0; // BACKTRACK
+                ld[i - col + N - 1] = rd[i + col] = cl[i] = 0;
             }
-            left++;
-            right--;
         }
+        return false;
+    }
+
+    static boolean solveNQ() {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("Enter the size of the chessboard (N):");
+        N = scanner.nextInt();
+        scanner.close();
+
+        ld = new int[2 * N];
+        rd = new int[2 * N];
+        cl = new int[N];
+
+        int board[][] = new int[N][N];
+
+        if (solveNQUtil(board, 0) == false) {
+            System.out.println("Solution does not exist");
+            return false;
+        }
+
+        printSolution(board);
         return true;
     }
-}
 
-
-#EULERS PHI ALGORITHM :
-
-import java.util.*;
-public class Main{
-    public static void main(String[] args){
-        Scanner sc = new Scanner(System.in);
-        int n = sc.nextInt();
-        System.out.println("phi("+n+") = "+phi(n));
-    }
-    static int phi(int n){
-        int c=1;
-        for(int i=2;i<n;i++){
-            if(gcd(i,n)==1){
-                c++;
-            }
-        }
-        return c;
-    }
-    static int gcd(int a,int b){
-        if(a==0){
-          return b;
-        }
-        else{
-            return gcd(b%a,a);
-        }
+    public static void main(String[] args) {
+        solveNQ();
     }
 }
 
 
-#SIMPLE SIEVE :
+#SELECTION SORT :
 
-import java.util.*;
-public class Main{
-    public static void main(String[] args){
-        Scanner sc = new Scanner(System.in);
-        int n = sc.nextInt();
-        sieve(n);
+import java.util.Scanner;
+
+public class EthCode {
+
+    void sort(int arr[]) {
+
+        int n = arr.length;
+        for (int i = 0; i < n - 1; i++) {
+            int min_idx = i;
+            for (int j = i + 1; j < n; j++)
+                if (arr[j] < arr[min_idx])
+                    min_idx = j;
+            int temp = arr[min_idx];
+            arr[min_idx] = arr[i];
+            arr[i] = temp;
+        }
     }
-    public static void sieve(int n){
-        boolean a[] = new boolean[n+1];
-        for(int i=0;i<=n;i++){
-            a[i]  = true;
+
+    void printArray(int arr[]) {
+        int n = arr.length;
+        for (int i = 0; i < n; ++i)
+            System.out.print(arr[i] + " ");
+        System.out.println();
+    }
+
+    public static void main(String args[]) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter the number of elements: ");
+        int numElements = scanner.nextInt();
+        int arr[] = new int[numElements];
+        System.out.println("Enter the elements:");
+        for (int i = 0; i < numElements; i++) {
+            arr[i] = scanner.nextInt();
         }
-        for(int j=2;j*j<=n;j++){
-            if(a[j]==true){
-                for(int k=j*j;k<=n;k+=j){
-                    a[k] = false;
-                }
-            }
-        }
-        int c=0;
-        for(int m=2;m<=n;m++){
-            if(a[m]==true){
-                System.out.print(m+" ");
-            }
-        }
-        
+        scanner.close();
+
+        EthCode ob = new EthCode();
+
+        ob.sort(arr);
+        System.out.println("Sorted array:");
+        ob.printArray(arr);
     }
 }
+
+
