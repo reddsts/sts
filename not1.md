@@ -84,65 +84,68 @@ class Main {
 }
 
 # maze
-
 import java.util.Scanner;
+
 public class RatMaze {
-static int N;
-void printSolution(int sol[][]) {
-for (int i = 0; i &lt; N; i++) {
-for (int j = 0; j &lt; N; j++)
-System.out.print(&quot; &quot; + sol[i][j] + &quot; &quot;);
-System.out.println();
-}
-}
-boolean isSafe(int maze[][], int x, int y) {
-return (x &gt;= 0 &amp;&amp; x &lt; N &amp;&amp; y &gt;= 0 &amp;&amp; y &lt; N &amp;&amp; maze[x][y] == 1);
-}
-boolean solveMazeUtil(int maze[][], int x, int y, int sol[][]) {
-if (x == N - 1 &amp;&amp; y == N - 1 &amp;&amp; maze[x][y] == 1) {
-sol[x][y] = 1;
-return true;
-}
+    static int N;
 
-if (isSafe(maze, x, y)) {
-sol[x][y] = 1;
-if (solveMazeUtil(maze, x + 1, y, sol))
-return true;
-if (solveMazeUtil(maze, x, y + 1, sol))
-return true;
+    void printSolution(int sol[][]) {
+        for (int i = 0; i < N; i++) {
+            for (int j = 0; j < N; j++)
+                System.out.print(" " + sol[i][j] + " ");
+            System.out.println();
+        }
+    }
 
-sol[x][y] = 0; // Backtrack
-return false;
-}
+    boolean isSafe(int maze[][], int x, int y) {
+        return (x >= 0 && x < N && y >= 0 && y < N && maze[x][y] == 1);
+    }
 
-return false;
-}
+    boolean solveMazeUtil(int maze[][], int x, int y, int sol[][]) {
+        if (x == N - 1 && y == N - 1 && maze[x][y] == 1) {
+            sol[x][y] = 1;
+            return true;
+        }
 
-boolean solveMaze(int maze[][]) {
-int sol[][] = new int[N][N];
-if (!solveMazeUtil(maze, 0, 0, sol)) {
-System.out.println(&quot;Solution doesn&#39;t exist&quot;);
-return false;
-}
-System.out.println(&quot;Solution:&quot;);
-printSolution(sol);
-return true;
-}
+        if (isSafe(maze, x, y)) {
+            sol[x][y] = 1;
+            if (solveMazeUtil(maze, x + 1, y, sol))
+                return true;
+            if (solveMazeUtil(maze, x, y + 1, sol))
+                return true;
 
-public static void main(String args[]) {
-Scanner scanner = new Scanner(System.in);
-RatMaze m = new RatMaze();
-System.out.print(&quot;Enter the size of the maze: &quot;);
-N = scanner.nextInt();
-int[][] maze = new int[N][N];
-System.out.println(&quot;Enter the maze (0 for blocked, 1 for path):&quot;);
-for (int i = 0; i &lt; N; i++) {
-for (int j = 0; j &lt; N; j++) {
-maze[i][j] = scanner.nextInt();
-}
-}
-m.solveMaze(maze);
+            sol[x][y] = 0; // Backtrack
+            return false;
+        }
 
-scanner.close();
-}
+        return false;
+    }
+
+    boolean solveMaze(int maze[][]) {
+        int sol[][] = new int[N][N];
+        if (!solveMazeUtil(maze, 0, 0, sol)) {
+            System.out.println("Solution doesn't exist");
+            return false;
+        }
+        System.out.println("Solution:");
+        printSolution(sol);
+        return true;
+    }
+
+    public static void main(String args[]) {
+        Scanner scanner = new Scanner(System.in);
+        RatMaze m = new RatMaze();
+        System.out.print("Enter the size of the maze: ");
+        N = scanner.nextInt();
+        int[][] maze = new int[N][N];
+        System.out.println("Enter the maze (0 for blocked, 1 for path):");
+        for (int i = 0; i < N; i++) {
+            for (int j = 0; j < N; j++) {
+                maze[i][j] = scanner.nextInt();
+            }
+        }
+        m.solveMaze(maze);
+
+        scanner.close();
+    }
 }
