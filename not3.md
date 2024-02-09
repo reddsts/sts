@@ -211,7 +211,19 @@ class GFG {
         int[] arr = new int[N];
         
         System.out.println("Enter the elements of the array:");
-        for (int i = 
+        for (int i = 0; i < N; i++) {
+            arr[i] = scanner.nextInt();
+        }
+        
+        // Function call
+        quickSort(arr, 0, N - 1);
+        System.out.println("Sorted array:");
+        printArr(arr);
+        
+        scanner.close();
+    }
+}
+
 
 
 
