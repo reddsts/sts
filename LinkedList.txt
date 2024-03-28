@@ -1,0 +1,564 @@
+//Linked List  Merge Two Sorted Linked Lists
+
+
+
+
+import java.util.Scanner;
+
+class Node {
+    int key;
+    Node next;
+    public Node(int key) {
+        this.key = key;
+        next = null;
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int n1 = sc.nextInt();
+        Node list1 = createLinkedList(sc, n1);
+        int n2 = sc.nextInt();
+        Node list2 = createLinkedList(sc, n2);
+        Node mergedList = mergeLists(list1, list2);
+        printLinkedList(mergedList);
+    }
+   
+    public static Node createLinkedList(Scanner sc, int n) {
+        Node head = null;
+        Node tail = null;
+        for (int i = 0; i < n; i++) {
+            int key = sc.nextInt();
+            Node newNode = new Node(key);
+            if (head == null) {
+                head = newNode;
+                tail = newNode;
+            } else {
+                tail.next = newNode;
+                tail = newNode;
+            }
+        }
+        return head;
+    }
+    
+    public static Node mergeLists(Node list1, Node list2) {
+        Node dummy = new Node(-1);
+        Node tail = dummy;
+
+        while (list1 != null && list2 != null) {
+            if (list1.key < list2.key) {
+                tail.next = list1;
+                list1 = list1.next;
+            } else {
+                tail.next = list2;
+                list2 = list2.next;
+            }
+            tail = tail.next;
+        }
+
+        if (list1 != null) {
+            tail.next = list1;
+        } else {
+            tail.next = list2;
+        }
+        return dummy.next;
+    }
+    
+    // Function to print a linked list
+    public static void printLinkedList(Node head) {
+        while (head != null) {
+            System.out.print(head.key);
+            if (head.next != null) {
+                System.out.print("->");
+            }
+            head = head.next;
+        }
+        System.out.println("->NULL");
+    }
+}
+
+
+
+//palindrom in LinkedList
+import java.util.Scanner;
+class ListNode {
+    int val;
+    ListNode next;
+
+    ListNode(int val) {
+        this.val = val;
+        this.next = null;
+    }
+}
+public class Main {
+    public boolean isPalindrome(ListNode head) {
+        if (head == null || head.next == null) {
+            return true; 
+        }
+
+        ListNode slow = head;
+        ListNode fast = head;
+
+        while (fast != null && fast.next != null) {
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+
+        ListNode reversedSecondHalf = reverseList(slow);
+        ListNode firstHalf = head;
+        while (reversedSecondHalf != null) {
+            if (firstHalf.val != reversedSecondHalf.val) {
+                return false;
+            }
+            firstHalf = firstHalf.next;
+            reversedSecondHalf = reversedSecondHalf.next;
+        }
+
+        return true;
+    }
+
+    private ListNode reverseList(ListNode head) {
+        ListNode prev = null;
+        ListNode current = head;
+
+        while (current != null) {
+            ListNode nextNode = current.next;
+            current.next = prev;
+            prev = current;
+            current = nextNode;
+        }
+
+        return prev;
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        int n = scanner.nextInt();
+        ListNode head = null;
+        ListNode tail = null;
+
+        for (int i = 0; i < n; i++) {
+            int val = scanner.nextInt();
+            ListNode newNode = new ListNode(val);
+
+            if (head == null) {
+                head = newNode;
+                tail = newNode;
+            } else {
+                tail.next = newNode;
+                tail = newNode;
+            }
+        }
+
+        Main solution = new Main();
+        boolean isPalindrome = solution.isPalindrome(head);
+      if(isPalindrome){
+        System.out.println("True");
+      }else{
+         System.out.println("False");
+    }
+}
+}
+
+
+
+//Merge K sorted List  LinkedList 
+
+import java.util.PriorityQueue;
+import java.util.Scanner;
+class ListNode {
+    int val;
+    ListNode next;
+
+    ListNode(int val) {
+        this.val = val;
+        this.next = null;
+    }
+}
+public class Main {
+    public ListNode mergeKLists(ListNode[] lists) {
+        PriorityQueue<ListNode> minHeap = new PriorityQueue<>((a, b) -> a.val - b.val);
+
+        for (ListNode list : lists) {
+            if (list != null) {
+                minHeap.offer(list);
+            }
+        }
+
+        ListNode dummy = new ListNode(0);
+        ListNode current = dummy;
+
+        while (!minHeap.isEmpty()) {
+            ListNode minNode = minHeap.poll();
+            current.next = minNode;
+            current = current.next;
+
+            if (minNode.next != null) {
+                minHeap.offer(minNode.next);
+            }
+        }
+
+        return dummy.next; 
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        int k = scanner.nextInt();
+
+        ListNode[] lists = new ListNode[k];
+        for (int i = 0; i < k; i++) {
+            ListNode head = null;
+            ListNode tail = null;
+
+            int value;
+            while ((value = scanner.nextInt()) != -1) {
+                ListNode newNode = new ListNode(value);
+
+                if (head == null) {
+                    head = newNode;
+                    tail = newNode;
+                } else {
+                    tail.next = newNode;
+                    tail = newNode;
+                }
+            }
+
+            lists[i] = head;
+        }
+
+        Main solution = new Main();
+        ListNode mergedList = solution.mergeKLists(lists);
+        while (mergedList != null) {
+            System.out.print(mergedList.val + " ");
+            mergedList = mergedList.next;
+        }
+    }
+}
+
+
+//Reverse K elements LinkedList 
+
+
+
+import java.util.LinkedList;
+import java.util.Scanner;
+
+public class Main {
+    public static LinkedList<Integer> reverseKNodes(LinkedList<Integer> list, int k) {
+        LinkedList<Integer> result = new LinkedList<>();
+        int size = list.size();
+
+        for (int i = 0; i < size; i += k) {
+            int end = Math.min(i + k, size);
+
+            if (end - i == k) {
+                for (int j = end - 1; j >= i; j--) {
+                    result.add(list.get(j));
+                }
+            } else {
+                for (int j = i; j < end; j++) {
+                    result.add(list.get(j));
+                }
+            }
+        }
+
+        return result;
+    }
+
+    public static void printListVertically(LinkedList<Integer> list) {
+        for (int value : list) {
+            System.out.println(value);
+        }
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        LinkedList<Integer> linkedList = new LinkedList<>();
+
+        int value;
+        while ((value = scanner.nextInt()) != -1) {
+            linkedList.add(value);
+        }
+
+        int k = scanner.nextInt();
+
+        LinkedList<Integer> reversedList = reverseKNodes(linkedList, k);
+
+        printListVertically(reversedList);
+    }
+}
+
+
+
+//Reorder List LinkedList 
+
+import java.util.Scanner;
+
+public class Main {
+    static Node head;
+
+    static class Node {
+        int data;
+        Node next;
+
+        Node(int d) {
+            data = d;
+            next = null;
+        }
+    }
+
+    void printlist(Node node) {
+        while (node != null) {
+            System.out.print(node.data + " ");
+            node = node.next;
+        }
+    }
+
+    Node reverselist(Node node) {
+        Node prev = null, curr = node, next;
+        while (curr != null) {
+            next = curr.next;
+            curr.next = prev;
+            prev = curr;
+            curr = next;
+        }
+        node = prev;
+        return node;
+    }
+
+    void rearrange(Node node) {
+        Node slow = node, fast = slow.next;
+        while (fast != null && fast.next != null) {
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+
+        Node node1 = node;
+        Node node2 = slow.next;
+        slow.next = null;
+
+        node2 = reverselist(node2);
+
+        node = new Node(0);
+        Node curr = node;
+        while (node1 != null || node2 != null) {
+            if (node1 != null) {
+                curr.next = node1;
+                curr = curr.next;
+                node1 = node1.next;
+            }
+
+            if (node2 != null) {
+                curr.next = node2;
+                curr = curr.next;
+                node2 = node2.next;
+            }
+        }
+
+        node = node.next;
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        int n = scanner.nextInt();
+        Main list = new Main();
+        for (int i = 0; i < n; i++) {
+            int value = scanner.nextInt();
+            Node newNode = new Node(value);
+            newNode.next = head;
+            head = newNode;
+        }
+
+        list.rearrange(head);
+        list.printlist(head);
+    }
+}
+
+//Rotate list LinkedList 
+import java.util.Scanner;
+
+public class Main {
+    static Node head;
+
+    static class Node {
+        int data;
+        Node next;
+
+        Node(int d) {
+            data = d;
+            next = null;
+        }
+    }
+
+    void printlist(Node node) {
+        while (node != null) {
+            System.out.print(node.data + " ");
+            node = node.next;
+        }
+    }
+
+    Node reverselist(Node node) {
+        Node prev = null, curr = node, next;
+        while (curr != null) {
+            next = curr.next;
+            curr.next = prev;
+            prev = curr;
+            curr = next;
+        }
+        node = prev;
+        return node;
+    }
+
+    void rearrange(Node node) {
+        Node slow = node, fast = slow.next;
+        while (fast != null && fast.next != null) {
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+
+        Node node1 = node;
+        Node node2 = slow.next;
+        slow.next = null;
+
+        node2 = reverselist(node2);
+
+        node = new Node(0);
+        Node curr = node;
+        while (node1 != null || node2 != null) {
+            if (node1 != null) {
+                curr.next = node1;
+                curr = curr.next;
+                node1 = node1.next;
+            }
+
+            if (node2 != null) {
+                curr.next = node2;
+                curr = curr.next;
+                node2 = node2.next;
+            }
+        }
+
+        node = node.next;
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        int n = scanner.nextInt();
+        Main list = new Main();
+        for (int i = 0; i < n; i++) {
+            int value = scanner.nextInt();
+            Node newNode = new Node(value);
+            newNode.next = head;
+            head = newNode;
+        }
+
+        list.rearrange(head);
+        list.printlist(head);
+    }
+}
+
+
+//Odd even LinkedList 
+import java.util.Scanner;
+
+public class Main {
+    Node head;
+    static class Node {
+        int data;
+        Node next;
+        public Node(int d) {
+            data = d;
+            next = null;
+        }
+    }
+
+    public static Main insert(Main list, int data) {
+        Node new_node = new Node(data);
+
+        if (list.head == null) {
+            list.head = new_node;
+        } else {
+            Node last = list.head;
+            while (last.next != null) {
+                last = last.next;
+            }
+            last.next = new_node;
+        }
+        return list;
+    }
+
+    public static void printList(Main list) {
+        Node currNode = list.head;
+
+        while (currNode != null) {
+            System.out.print(currNode.data + " ");
+            currNode = currNode.next;
+        }
+    }
+
+    public static Main segregateNodes(Main list) {
+        if (list.head == null || list.head.next == null) {
+            return list;
+        }
+
+        Main oddList = new Main();
+        Main evenList = new Main();
+
+        Node curr = list.head;
+        Node oddTail = null;
+        Node evenTail = null;
+        boolean isOdd = true;
+
+        while (curr != null) {
+            if (isOdd) {
+                oddTail = insertNode(oddList, curr.data, oddTail);
+            } else {
+                evenTail = insertNode(evenList, curr.data, evenTail);
+            }
+            isOdd = !isOdd;
+            curr = curr.next;
+        }
+
+        if (oddTail != null) {
+            oddTail.next = evenList.head;
+        } else {
+            return evenList;
+        }
+
+        return oddList;
+    }
+
+    public static Node insertNode(Main list, int data, Node tail) {
+        Node new_node = new Node(data);
+
+        if (list.head == null) {
+            list.head = new_node;
+            tail = new_node;
+        } else {
+            tail.next = new_node;
+            tail = new_node;
+        }
+        return tail;
+    }
+
+    public static void main(String[] args) {
+        Main ll = new Main();
+        Scanner sc = new Scanner(System.in);
+        int n = sc.nextInt();
+        sc.nextLine();
+        String str = sc.nextLine();
+        String arr[] = str.split(" ");
+
+        for (int i = 0; i < n; i++) {
+            insert(ll, Integer.parseInt(arr[i]));
+        }
+
+        Main result = segregateNodes(ll);
+        printList(result);
+    }
+}
