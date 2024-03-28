@@ -1,0 +1,184 @@
+//Rotate list LinkedList 
+import java.util.Scanner;
+
+public class Main {
+    static Node head;
+
+    static class Node {
+        int data;
+        Node next;
+
+        Node(int d) {
+            data = d;
+            next = null;
+        }
+    }
+
+    void printlist(Node node) {
+        while (node != null) {
+            System.out.print(node.data + " ");
+            node = node.next;
+        }
+    }
+
+    Node reverselist(Node node) {
+        Node prev = null, curr = node, next;
+        while (curr != null) {
+            next = curr.next;
+            curr.next = prev;
+            prev = curr;
+            curr = next;
+        }
+        node = prev;
+        return node;
+    }
+
+    void rearrange(Node node) {
+        Node slow = node, fast = slow.next;
+        while (fast != null && fast.next != null) {
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+
+        Node node1 = node;
+        Node node2 = slow.next;
+        slow.next = null;
+
+        node2 = reverselist(node2);
+
+        node = new Node(0);
+        Node curr = node;
+        while (node1 != null || node2 != null) {
+            if (node1 != null) {
+                curr.next = node1;
+                curr = curr.next;
+                node1 = node1.next;
+            }
+
+            if (node2 != null) {
+                curr.next = node2;
+                curr = curr.next;
+                node2 = node2.next;
+            }
+        }
+
+        node = node.next;
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        int n = scanner.nextInt();
+        Main list = new Main();
+        for (int i = 0; i < n; i++) {
+            int value = scanner.nextInt();
+            Node newNode = new Node(value);
+            newNode.next = head;
+            head = newNode;
+        }
+
+        list.rearrange(head);
+        list.printlist(head);
+    }
+}
+
+
+//Odd even LinkedList 
+import java.util.Scanner;
+
+public class Main {
+    Node head;
+    static class Node {
+        int data;
+        Node next;
+        public Node(int d) {
+            data = d;
+            next = null;
+        }
+    }
+
+    public static Main insert(Main list, int data) {
+        Node new_node = new Node(data);
+
+        if (list.head == null) {
+            list.head = new_node;
+        } else {
+            Node last = list.head;
+            while (last.next != null) {
+                last = last.next;
+            }
+            last.next = new_node;
+        }
+        return list;
+    }
+
+    public static void printList(Main list) {
+        Node currNode = list.head;
+
+        while (currNode != null) {
+            System.out.print(currNode.data + " ");
+            currNode = currNode.next;
+        }
+    }
+
+    public static Main segregateNodes(Main list) {
+        if (list.head == null || list.head.next == null) {
+            return list;
+        }
+
+        Main oddList = new Main();
+        Main evenList = new Main();
+
+        Node curr = list.head;
+        Node oddTail = null;
+        Node evenTail = null;
+        boolean isOdd = true;
+
+        while (curr != null) {
+            if (isOdd) {
+                oddTail = insertNode(oddList, curr.data, oddTail);
+            } else {
+                evenTail = insertNode(evenList, curr.data, evenTail);
+            }
+            isOdd = !isOdd;
+            curr = curr.next;
+        }
+
+        if (oddTail != null) {
+            oddTail.next = evenList.head;
+        } else {
+            return evenList;
+        }
+
+        return oddList;
+    }
+
+    public static Node insertNode(Main list, int data, Node tail) {
+        Node new_node = new Node(data);
+
+        if (list.head == null) {
+            list.head = new_node;
+            tail = new_node;
+        } else {
+            tail.next = new_node;
+            tail = new_node;
+        }
+        return tail;
+    }
+
+    public static void main(String[] args) {
+        Main ll = new Main();
+        Scanner sc = new Scanner(System.in);
+        int n = sc.nextInt();
+        sc.nextLine();
+        String str = sc.nextLine();
+        String arr[] = str.split(" ");
+
+        for (int i = 0; i < n; i++) {
+            insert(ll, Integer.parseInt(arr[i]));
+        }
+
+        Main result = segregateNodes(ll);
+        printList(result);
+    }
+}

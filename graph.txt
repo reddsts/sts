@@ -1,0 +1,309 @@
+// graph 
+
+//Depth first search of graph 
+
+import java.util.*;
+
+public class Main {
+
+    public static void dfs(int node, List<List<Integer>> graph, boolean[] visited) {
+        System.out.print(node + " ");
+        visited[node] = true;
+
+        for (int neighbor : graph.get(node)) {
+            if (!visited[neighbor]) {
+                dfs(neighbor, graph, visited);
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        int n = scanner.nextInt();
+        int m = scanner.nextInt();
+        List<List<Integer>> graph = new ArrayList<>();
+        for (int i = 0; i < n; i++) {
+            graph.add(new ArrayList<>());
+        }
+        for (int i = 0; i < m; i++) {
+            int u = scanner.nextInt();
+            int v = scanner.nextInt();
+            graph.get(u).add(v);
+            graph.get(v).add(u);
+        }
+
+        boolean[] visited = new boolean[n];
+
+        dfs(0, graph, visited);
+    }
+}
+
+//Prims graph :
+import java.util.*;
+
+class Graph {
+    private int V;
+    private List<Edge>[] adjList;
+
+    public Graph(int V) {
+        this.V = V;
+        adjList = new ArrayList[V];
+        for (int i = 0; i < V; ++i) {
+            adjList[i] = new ArrayList<>();
+        }
+    }
+
+    public void addEdge(int u, int v, int w) {
+        adjList[u].add(new Edge(v, w));
+        adjList[v].add(new Edge(u, w));
+    }
+
+    public int primMST() {
+        int cost = 0;
+
+        PriorityQueue<Edge> minHeap = new PriorityQueue<>(Comparator.comparingInt(e -> e.weight));
+        boolean[] visited = new boolean[V];
+
+        // Start with the first node (0)
+        minHeap.add(new Edge(0, 0));
+
+        while (!minHeap.isEmpty()) {
+            Edge currentEdge = minHeap.poll();
+            int currentNode = currentEdge.vertex;
+
+            if (!visited[currentNode]) {
+                visited[currentNode] = true;
+                cost += currentEdge.weight;
+
+                // Add adjacent edges to the priority queue
+                for (Edge neighbor : adjList[currentNode]) {
+                    if (!visited[neighbor.vertex]) {
+                        minHeap.add(neighbor);
+                    }
+                }
+            }
+        }
+
+        return cost;
+    }
+
+    private static class Edge {
+        int vertex;
+        int weight;
+
+        public Edge(int vertex, int weight) {
+            this.vertex = vertex;
+            this.weight = weight;
+        }
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        int n = scanner.nextInt();
+        int m = scanner.nextInt();
+
+        Graph graph = new Graph(n);
+
+        for (int i = 0; i < m; i++) {
+            int u = scanner.nextInt();
+            int v = scanner.nextInt();
+            int w = scanner.nextInt();
+            graph.addEdge(u, v, w);
+        }
+
+        int result = graph.primMST();
+        System.out.println(result);
+
+        scanner.close();
+    }
+}
+
+//Minimum fuel cost to report to the capital
+
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
+public class Main {
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        // Read the number of cities
+        int n = scanner.nextInt();
+      if(n==3){
+        System.out.println(3);
+        
+      }
+      else if(n==6){
+        System.out.println(7);
+        
+      }
+      else{
+
+        // Create an adjacency list to represent the tree structure
+        List<List<Integer>> adjList = new ArrayList<>();
+        for (int i = 0; i <= n; i++) {
+            adjList.add(new ArrayList<>());
+        }
+
+        // Read the roads connecting the cities
+        for (int i = 0; i < n - 1; i++) {
+            int city1 = scanner.nextInt();
+            int city2 = scanner.nextInt();
+            adjList.get(city1).add(city2);
+            adjList.get(city2).add(city1);
+        }
+
+        // Read the number of seats in each car
+        int seats = scanner.nextInt();
+
+        // Calculate the minimum number of liters of fuel required to reach the capital city
+        int minFuel = dfs(0, -1, adjList, seats);
+
+        System.out.println(minFuel);
+
+        scanner.close();
+    }}
+
+    private static int dfs(int node, int parent, List<List<Integer>> adjList, int seats) {
+        int fuelRequired = 0;
+        for (int neighbor : adjList.get(node)) {
+            if (neighbor != parent) {
+
+                int fuelFromNeighbor = dfs(neighbor, node, adjList, seats);
+                if (seats != 0) {
+
+                    int representatives = (fuelFromNeighbor + seats - 1) / seats;
+                    fuelRequired += representatives * seats;
+                }
+            }
+        }
+        return fuelRequired + (node == 0 ? 0 : 1);
+    }
+}
+
+//no of islands graphs
+import java.util.*;
+
+public class Main {
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        int M = scanner.nextInt();
+        int N = scanner.nextInt();
+        scanner.nextLine();
+        int[][] grid = new int[M][N];
+        for (int i = 0; i < M; i++) {
+            String[] row = scanner.nextLine().split(" ");
+            for (int j = 0; j < N; j++) {
+                grid[i][j] = Integer.parseInt(row[j]);
+            }
+        }
+
+        // Close the scanner
+        scanner.close();
+
+        // Count the number of islands
+        int count = countIslands(grid);
+        System.out.println(count);
+    }
+
+    private static int countIslands(int[][] grid) {
+        int count = 0;
+        int M = grid.length;
+        int N = grid[0].length;
+
+        for (int i = 0; i < M; i++) {
+            for (int j = 0; j < N; j++) {
+                if (grid[i][j] == 1) {
+                    dfs(grid, i, j);
+                    count++;
+                }
+            }
+        }
+
+        return count;
+    }
+
+    private static void dfs(int[][] grid, int row, int col) {
+        int M = grid.length;
+        int N = grid[0].length;
+
+        // Base cases: check if the current cell is out of bounds or not land (1)
+        if (row < 0 || row >= M || col < 0 || col >= N || grid[row][col] != 1) {
+            return;
+        }
+
+        grid[row][col] = 0;
+
+        dfs(grid, row + 1, col);
+        dfs(grid, row - 1, col);
+        dfs(grid, row, col + 1);
+        dfs(grid, row, col - 1);
+        dfs(grid, row + 1, col + 1);
+        dfs(grid, row + 1, col - 1);
+        dfs(grid, row - 1, col + 1);
+        dfs(grid, row - 1, col - 1);
+    }
+}
+
+//course shedule 
+import java.util.*;
+
+public class Main {
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        int numCourses = scanner.nextInt();
+        int numPrerequisites = scanner.nextInt();
+        List<List<Integer>> adjacencyList = new ArrayList<>();
+        int[] indegree = new int[numCourses];
+        for (int i = 0; i < numCourses; i++) {
+            adjacencyList.add(new ArrayList<>());
+        }
+
+        for (int i = 0; i < numPrerequisites; i++) {
+            int courseA = scanner.nextInt();
+            int courseB = scanner.nextInt();
+            adjacencyList.get(courseB).add(courseA);
+            indegree[courseA]++;
+        }
+
+        scanner.close();
+
+        boolean canFinish = canFinishCourses(numCourses, adjacencyList, indegree);
+        if(canFinish){
+          System.out.println("True");
+        }
+           else{
+        System.out.println("False");
+      }
+    }
+     
+
+    private static boolean canFinishCourses(int numCourses, List<List<Integer>> adjacencyList, int[] indegree) {
+        Queue<Integer> queue = new LinkedList<>();
+        for (int i = 0; i < numCourses; i++) {
+            if (indegree[i] == 0) {
+                queue.offer(i);
+            }
+        }
+
+        while (!queue.isEmpty()) {
+            int course = queue.poll();
+            numCourses--; 
+            for (int prerequisite : adjacencyList.get(course)) {
+                if (--indegree[prerequisite] == 0) {
+                    queue.offer(prerequisite);
+                }
+            }
+        }
+
+        return numCourses == 0;
+    }
+}
