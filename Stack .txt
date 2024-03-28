@@ -1,6 +1,21 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 //Stack 
-
-
 
 //Longest valid parenthesis  Stack 
 import java.util.*;
