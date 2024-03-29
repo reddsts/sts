@@ -1,0 +1,258 @@
+
+
+
+
+
+
+
+
+
+//Min Stack
+import java.util.*;
+
+class MyStack {
+    Stack<Integer> s;
+    Integer minEle;
+
+    MyStack() {
+        s = new Stack<Integer>();
+    }
+
+    void getMin() {
+        if (s.isEmpty())
+            System.out.println("Stack is empty");
+        else
+            System.out.println("Minimum Element in the stack is: " + minEle);
+    }
+
+    void peek() {
+        if (s.isEmpty()) {
+            System.out.println("Stack is empty ");
+            return;
+        }
+        Integer t = s.peek();
+        System.out.print("Top Most Element is: ");
+        if (t < minEle)
+            System.out.println(minEle);
+        else
+            System.out.println(t);
+    }
+
+    void pop() {
+        if (s.isEmpty()) {
+            System.out.println("Stack is empty");
+            return;
+        }
+        System.out.print("Top Most Element Removed: ");
+        Integer t = s.pop();
+        if (t < minEle) {
+            System.out.println(minEle);
+            minEle = 2 * minEle - t;
+        } else
+            System.out.println(t);
+    }
+
+    void push(Integer x) {
+        if (s.isEmpty()) {
+            minEle = x;
+            s.push(x);
+            System.out.println("Number Inserted: " + x);
+            return;
+        }
+        if (x < minEle) {
+            s.push(2 * x - minEle);
+            minEle = x;
+        } else
+            s.push(x);
+        System.out.println("Number Inserted: " + x);
+    }
+}
+
+public class minstack {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        MyStack s = new MyStack();
+
+        System.out.println("Enter the number of elements to push:");
+        int n = scanner.nextInt();
+        System.out.println("Enter the elements to push:");
+        for (int i = 0; i < n; i++) {
+            int value = scanner.nextInt();
+            s.push(value);
+        }
+
+        s.getMin();
+
+        System.out.println("Enter the number of elements to pop:");
+        int m = scanner.nextInt();
+        System.out.println("Popping " + m + " elements:");
+        for (int i = 0; i < m; i++) {
+            s.pop();
+        }
+
+        s.getMin();
+
+        s.peek();
+    }
+}
+
+
+//Celebraty 
+import java.util.*;
+
+public class celebrity {
+    public static int celebritySolution(int[][] mat) {
+        Stack<Integer> stk = new Stack<>();
+        for (int i = 0; i < mat.length; i++) {
+            stk.push(i);
+        }
+        while (stk.size() > 1) {
+            int col = stk.pop();
+            int row = stk.pop();
+            if (mat[row][col] == 1) {
+                stk.push(col);
+            } else {
+                stk.push(row);
+            }
+        }
+        int x = stk.pop();
+        for (int j = 0; j < mat.length; j++) {
+            if (j == x)
+                continue;
+            if (mat[x][j] == 1) {
+                return -1;
+            }
+        }
+        for (int i = 0; i < mat.length; i++) {
+            if (i == x)
+                continue;
+            if (mat[i][x] == 0) {
+                return -1;
+            }
+        }
+        return x;
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("Enter the size of the square matrix:");
+        int n = scanner.nextInt();
+
+        int[][] matrix = new int[n][n];
+        System.out.println("Enter the elements of the matrix (0 or 1):");
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                matrix[i][j] = scanner.nextInt();
+            }
+        }
+
+        int res = celebritySolution(matrix);
+        if (res == -1) {
+            System.out.println("There is no celebrity in the party");
+        } else {
+            System.out.println(res + " is the celebrity in the party");
+        }
+    }
+}
+
+
+//Tower of honai
+import java.util.Scanner;
+
+class iterativetowerofhanoi {
+    class Stack {
+        int capacity;
+        int top;
+        int array[];
+    }
+
+    Stack createStack(int capacity) {
+        Stack stack = new Stack();
+        stack.capacity = capacity;
+        stack.top = -1;
+        stack.array = new int[capacity];
+        return stack;
+    }
+
+    boolean isFull(Stack stack) {
+        return (stack.top == stack.capacity - 1);
+    }
+
+    boolean isEmpty(Stack stack) {
+        return (stack.top == -1);
+    }
+
+    void push(Stack stack, int item) {
+        if (isFull(stack))
+            return;
+        stack.array[++stack.top] = item;
+    }
+
+    int pop(Stack stack) {
+        if (isEmpty(stack))
+            return Integer.MIN_VALUE;
+        int ret;
+        ret = stack.array[stack.top];
+        stack.array[stack.top--] = 0;
+        return ret;
+    }
+
+    void moveDisksBetweenTwoPoles(Stack A, Stack B, char s, char d) {
+        int pole1TopDisk = pop(A);
+        int pole2TopDisk = pop(B);
+        if (pole1TopDisk == Integer.MIN_VALUE) {
+            push(A, pole2TopDisk);
+            moveDisk(d, s, pole2TopDisk);
+        } else if (pole2TopDisk == Integer.MIN_VALUE) {
+            push(B, pole1TopDisk);
+            moveDisk(s, d, pole1TopDisk);
+        } else if (pole1TopDisk > pole2TopDisk) {
+            push(A, pole1TopDisk);
+            push(A, pole2TopDisk);
+            moveDisk(d, s, pole2TopDisk);
+        } else {
+            push(B, pole2TopDisk);
+            push(B, pole1TopDisk);
+            moveDisk(s, d, pole1TopDisk);
+        }
+    }
+
+    void moveDisk(char fromPeg, char toPeg, int disk) {
+        System.out.println("Move the disk " + disk + " from " + fromPeg + " to " + toPeg);
+    }
+
+    void tohIterative(int num_of_disks, Stack src, Stack aux, Stack dest) {
+        int i, total_num_of_moves;
+        char s = 'S', d = 'D', a = 'A';
+        if (num_of_disks % 2 == 0) {
+            char temp = d;
+            d = a;
+            a = temp;
+        }
+        total_num_of_moves = (int) (Math.pow(2, num_of_disks) - 1);
+        for (i = num_of_disks; i >= 1; i--)
+            push(src, i);
+        for (i = 1; i <= total_num_of_moves; i++) {
+            if (i % 3 == 1)
+                moveDisksBetweenTwoPoles(src, dest, s, d);
+            else if (i % 3 == 2)
+                moveDisksBetweenTwoPoles(src, aux, s, a);
+            else if (i % 3 == 0)
+                moveDisksBetweenTwoPoles(aux, dest, a, d);
+        }
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Enter the number of disks:");
+        int num_of_disks = scanner.nextInt();
+
+        iterativetowerofhanoi ob = new iterativetowerofhanoi();
+        Stack src, dest, aux;
+        src = ob.createStack(num_of_disks);
+        dest = ob.createStack(num_of_disks);
+        aux = ob.createStack(num_of_disks);
+        ob.tohIterative(num_of_disks, src, aux, dest);
+    }
+}
