@@ -1,0 +1,243 @@
+
+
+
+
+
+
+
+//Stock span
+import java.util.*;
+
+public class stockSpanUsingStack {
+    static void calculateSpan(int price[], int n, int S[]) {
+        Stack<Integer> st = new Stack<>();
+        st.push(0);
+        S[0] = 1;
+        for (int i = 1; i < n; i++) {
+            while (!st.isEmpty() && price[st.peek()] <= price[i])
+                st.pop();
+            S[i] = (i - st.peek());
+            st.push(i);
+        }
+    }
+
+    static void printArray(int arr[]) {
+        System.out.print(Arrays.toString(arr));
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Enter the number of days:");
+        int n = scanner.nextInt();
+        int price[] = new int[n];
+        System.out.println("Enter the prices for each day:");
+        for (int i = 0; i < n; i++) {
+            price[i] = scanner.nextInt();
+        }
+        int S[] = new int[n];
+        calculateSpan(price, n, S);
+        printArray(S);
+    }
+}
+
+
+//Priority queue using DLL
+import java.util.*;
+
+class PqUsingDLL {
+    static Node front, rear;
+
+    static class Node {
+        char info;
+        int priority;
+        Node prev, next;
+    }
+
+    static void display() {
+        Node current = front;
+        if (isEmpty()) {
+            System.out.println("List is empty");
+            return;
+        }
+        System.out.println("Nodes of doubly linked list: ");
+        while (current != null) {
+            System.out.print("In " + current.info + " pr " + current.priority + " \n");
+            current = current.next;
+        }
+    }
+
+    static void push(char n, int p) {
+        Node news = new Node();
+        news.info = n;
+        news.priority = p;
+        if (isEmpty()) {
+            front = news;
+            rear = news;
+            news.next = null;
+        } else {
+            if (p <= (front).priority) {
+                news.next = front;
+                front.prev = news;
+                front = news;
+            } else if (p > (rear).priority) {
+                news.next = null;
+                (rear).next = news;
+                news.prev = rear;
+                rear = news;
+            } else {
+                Node start = (front).next;
+                while (start.priority < p)
+                    start = start.next;
+                (start.prev).next = news;
+                news.prev = start.prev;
+                news.next = start;
+                start.prev = news;
+            }
+        }
+    }
+
+    static char peek() {
+        return front.info;
+    }
+
+    static boolean isEmpty() {
+        return (front == null);
+    }
+
+    static char pop() {
+        Node temp = front;
+        char res = temp.info;
+        (front) = (front).next;
+        if (isEmpty())
+            rear = null;
+        return res;
+    }
+
+    public static void main(String args[]) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Enter the number of elements to push:");
+        int n = scanner.nextInt();
+        System.out.println("Enter the elements and their priorities:");
+        for (int i = 0; i < n; i++) {
+            char element = scanner.next().charAt(0);
+            int priority = scanner.nextInt();
+            push(element, priority);
+        }
+        display();
+        System.out.println("peek1 " + peek());
+        System.out.println("popped element " + pop());
+        System.out.println("peek2 " + peek());
+    }
+}
+
+
+
+//sort without extra space
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.Scanner;
+
+public class QueuSortWithoutExtraSpace {
+    public static int minIndex(Queue<Integer> list, int sortIndex) {
+        int min_index = -1;
+        int min_value = Integer.MAX_VALUE;
+        int s = list.size();
+        for (int i = 0; i < s; i++) {
+            int current = list.peek();
+            if (current <= min_value && i <= sortIndex) {
+                min_index = i;
+                min_value = current;
+            }
+            list.add(current);
+            list.poll();
+        }
+        return min_index;
+    }
+
+    public static void insertMinToRear(Queue<Integer> list, int min_index) {
+        int min_value = 0;
+        int s = list.size();
+        for (int i = 0; i < s; i++) {
+            int current = list.peek();
+            list.poll();
+            if (i != min_index)
+                list.add(current);
+            else
+                min_value = current;
+        }
+        list.add(min_value);
+    }
+
+    public static void sortQueue(Queue<Integer> list) {
+        for (int i = 1; i <= list.size(); i++) {
+            int min_index = minIndex(list, list.size() - i);
+            insertMinToRear(list, min_index);
+        }
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        Queue<Integer> list = new LinkedList<Integer>();
+
+        System.out.println("Enter the number of elements:");
+        int n = scanner.nextInt();
+        System.out.println("Enter the elements:");
+        for (int i = 0; i < n; i++) {
+            int element = scanner.nextInt();
+            list.add(element);
+        }
+
+        sortQueue(list);
+
+        System.out.println("Sorted Queue:");
+        while (!list.isEmpty()) {
+            System.out.print(list.peek() + " ");
+            list.poll();
+        }
+    }
+}
+
+
+//Stack Permuatation
+import java.util.Queue;
+import java.util.LinkedList;
+import java.util.Stack;
+import java.util.Scanner;
+
+class demo {
+    static boolean checkStackPermutation(Queue<Integer> input, Queue<Integer> output, int n) {
+        Stack<Integer> st = new Stack<>();
+        while (!input.isEmpty()) {
+            st.push(input.poll());
+            while (!st.isEmpty() && st.peek().equals(output.peek())) {
+                st.pop();
+                output.poll();
+            }
+        }
+        return (output.isEmpty() && st.isEmpty());
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        Queue<Integer> input = new LinkedList<>();
+        Queue<Integer> output = new LinkedList<>();
+
+        System.out.println("Enter the number of elements:");
+        int n = scanner.nextInt();
+        System.out.println("Enter the elements for input queue:");
+        for (int i = 0; i < n; i++) {
+            int element = scanner.nextInt();
+            input.offer(element);
+        }
+        System.out.println("Enter the elements for output queue:");
+        for (int i = 0; i < n; i++) {
+            int element = scanner.nextInt();
+            output.offer(element);
+        }
+
+        if (checkStackPermutation(input, output, n))
+            System.out.println("Yes");
+        else
+            System.out.println("Not Possible");
+    }
+}
